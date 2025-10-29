@@ -8,49 +8,49 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 220 20% 97%;
-    --foreground: 215 25% 15%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
 
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 0 0% 10%;
 
-    --primary: 215 100% 25%;
+    --primary: 0 72% 51%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 20% 90%;
-    --secondary-foreground: 215 25% 15%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 215 20% 93%;
-    --muted-foreground: 215 15% 45%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 0 85% 55%;
+    --accent: 0 72% 51%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 20% 88%;
-    --input: 215 20% 88%;
-    --ring: 215 100% 25%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 72% 51%;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
     
     /* Glassmorphic effects */
     --glass-bg: 0 0% 100%;
-    --glass-border: 215 30% 90%;
+    --glass-border: 0 0% 95%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(215 100% 25%), hsl(215 100% 35%));
-    --gradient-accent: linear-gradient(135deg, hsl(0 85% 55%), hsl(0 85% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(215 100% 25%) 0%, hsl(0 85% 55%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(0 72% 51%), hsl(0 72% 61%));
+    --gradient-accent: linear-gradient(135deg, hsl(0 0% 100%), hsl(0 0% 98%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 72% 51%) 0%, hsl(0 82% 61%) 100%);
     
     /* Shadows */
-    --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-    --shadow-glow: 0 0 40px rgba(0, 85, 170, 0.3);
-    --shadow-accent-glow: 0 0 40px rgba(220, 38, 38, 0.3);
+    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+    --shadow-glow: 0 0 60px rgba(239, 68, 68, 0.2);
+    --shadow-accent-glow: 0 0 40px rgba(239, 68, 68, 0.3);
     
     /* Animations */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -76,40 +76,40 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 215 30% 8%;
+    --background: 0 0% 5%;
     --foreground: 0 0% 98%;
 
-    --card: 215 25% 12%;
+    --card: 0 0% 10%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 215 25% 12%;
+    --popover: 0 0% 10%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 215 100% 55%;
+    --primary: 0 72% 51%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 25% 20%;
+    --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
 
-    --muted: 215 25% 20%;
-    --muted-foreground: 215 15% 65%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 0 85% 55%;
+    --accent: 0 72% 51%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 25% 20%;
-    --input: 215 25% 20%;
-    --ring: 215 100% 55%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 72% 51%;
     
-    --glass-bg: 215 25% 12%;
-    --glass-border: 215 25% 25%;
+    --glass-bg: 0 0% 10%;
+    --glass-border: 0 0% 20%;
     
-    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    --shadow-glow: 0 0 40px rgba(59, 130, 246, 0.5);
-    --shadow-accent-glow: 0 0 40px rgba(239, 68, 68, 0.5);
+    --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 60px rgba(239, 68, 68, 0.3);
+    --shadow-accent-glow: 0 0 40px rgba(239, 68, 68, 0.4);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

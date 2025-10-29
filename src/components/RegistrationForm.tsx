@@ -96,9 +96,9 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
       />
 
       {/* Modal */}
-      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-background rounded-3xl shadow-2xl animate-scale-in">
+      <div className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white dark:bg-card rounded-3xl shadow-2xl animate-scale-in border border-border/50">
         {/* Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-gradient-to-r from-primary to-accent border-b border-border/50 backdrop-blur-xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between p-8 bg-primary border-b border-border/50 backdrop-blur-xl">
           <div>
             <h2 className="text-3xl font-bold text-white">Register for Influencia</h2>
             <p className="text-sm text-white/90 mt-1">Edition 2 - Transform Your Life</p>
@@ -116,9 +116,9 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
           {/* Personal Information */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">1</div>
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">1</div>
               Personal Information
             </h3>
             
@@ -129,7 +129,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   id="fullName"
                   {...register("fullName")}
                   placeholder="Enter your full name"
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-colors h-12"
                 />
                 {errors.fullName && (
                   <p className="text-sm text-destructive">{errors.fullName.message}</p>
@@ -142,7 +142,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   id="contactNumber"
                   {...register("contactNumber")}
                   placeholder="+91 XXXXX XXXXX"
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-colors h-12"
                 />
                 {errors.contactNumber && (
                   <p className="text-sm text-destructive">{errors.contactNumber.message}</p>
@@ -156,7 +156,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   type="email"
                   {...register("email")}
                   placeholder="your.email@example.com"
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-colors h-12"
                 />
                 {errors.email && (
                   <p className="text-sm text-destructive">{errors.email.message}</p>
@@ -169,16 +169,16 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   id="linkedinProfile"
                   {...register("linkedinProfile")}
                   placeholder="https://linkedin.com/in/yourprofile"
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-colors h-12"
                 />
               </div>
             </div>
           </div>
 
           {/* Professional Information */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold">2</div>
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">2</div>
               Professional Information
             </h3>
 
@@ -189,7 +189,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   id="designation"
                   {...register("designation")}
                   placeholder="e.g., CEO, Manager, Entrepreneur"
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-colors h-12"
                 />
                 {errors.designation && (
                   <p className="text-sm text-destructive">{errors.designation.message}</p>
@@ -202,7 +202,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   id="business"
                   {...register("business")}
                   placeholder="Your company or organization name"
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-colors h-12"
                 />
                 {errors.business && (
                   <p className="text-sm text-destructive">{errors.business.message}</p>
@@ -215,7 +215,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   id="experience"
                   {...register("experience")}
                   placeholder="e.g., 5 years"
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-colors h-12"
                 />
                 {errors.experience && (
                   <p className="text-sm text-destructive">{errors.experience.message}</p>
@@ -230,10 +230,10 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                 {sectors.map((sector) => (
                   <div
                     key={sector}
-                    className={`flex items-center space-x-2 p-3 rounded-xl border-2 transition-all cursor-pointer ${
+                    className={`flex items-center space-x-3 p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
                       selectedSectors.includes(sector)
-                        ? "bg-primary/10 border-primary"
-                        : "bg-white/50 dark:bg-white/5 border-border hover:border-primary/50"
+                        ? "bg-primary/10 border-primary shadow-lg"
+                        : "bg-background border-border hover:border-primary/50 hover:shadow-md"
                     }`}
                     onClick={() => handleSectorToggle(sector)}
                   >
@@ -251,16 +251,16 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                 <Input
                   {...register("otherSector")}
                   placeholder="Please specify your sector"
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary"
+                  className="bg-background border-border focus:border-primary transition-colors h-12 animate-fade-in-up"
                 />
               )}
             </div>
           </div>
 
           {/* Additional Information */}
-          <div className="space-y-4">
-            <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">3</div>
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-foreground flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">3</div>
               Additional Information
             </h3>
 
@@ -272,7 +272,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   {...register("achievements")}
                   placeholder="Share your notable achievements and milestones..."
                   rows={4}
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary resize-none"
+                  className="bg-background border-border focus:border-primary transition-colors resize-none"
                 />
               </div>
 
@@ -283,7 +283,7 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   {...register("futurePlan")}
                   placeholder="Describe your vision and goals for the next 5 years..."
                   rows={4}
-                  className="bg-white/50 dark:bg-white/5 backdrop-blur-sm border-primary/20 focus:border-primary resize-none"
+                  className="bg-background border-border focus:border-primary transition-colors resize-none"
                 />
                 {errors.futurePlan && (
                   <p className="text-sm text-destructive">{errors.futurePlan.message}</p>
@@ -293,11 +293,11 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
           </div>
 
           {/* Submit Button */}
-          <div className="flex gap-4 pt-4">
+          <div className="flex gap-4 pt-6">
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white font-semibold py-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              className="flex-1 bg-primary hover:bg-primary/90 text-white font-semibold py-7 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
             >
               {isSubmitting ? (
                 <>
