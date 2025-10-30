@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Phone, Mail, Calendar, Info } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Hero from "@/components/Hero";
-import AboutInfluencia from "@/components/AboutInfluencia";
 import RegistrationForm from "@/components/RegistrationForm";
-import { Phone, Mail, MapPin } from "lucide-react";
 import kaisanLogo from "@/assets/kaisan-logo.png";
 
 const Index = () => {
@@ -10,8 +11,24 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Hero onRegisterClick={() => setIsFormOpen(true)} />
-      <AboutInfluencia />
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <Link to="/">
+            <img src={kaisanLogo} alt="Kaisan Associates" className="h-12 object-contain" />
+          </Link>
+          <Link to="/about">
+            <Button variant="ghost" size="sm">
+              <Info className="w-4 h-4 mr-2" />
+              About
+            </Button>
+          </Link>
+        </div>
+      </nav>
+
+      <div className="pt-20">
+        <Hero onRegisterClick={() => setIsFormOpen(true)} />
+      </div>
       
       {/* Contact Section */}
       <section className="py-32 bg-gradient-to-b from-background to-primary/5 relative overflow-hidden">
@@ -48,7 +65,7 @@ const Index = () => {
               </div>
 
               <div className="p-8 rounded-2xl bg-white/80 dark:bg-white/5 backdrop-blur-xl border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-lg group">
-                <MapPin className="w-8 h-8 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform" />
+                <Calendar className="w-8 h-8 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform" />
                 <p className="text-sm text-muted-foreground mb-2 font-medium">Date</p>
                 <p className="text-lg font-semibold text-foreground">
                   Saturday, 13 Dec 2025

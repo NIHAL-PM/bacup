@@ -11,17 +11,18 @@ import { X, Check, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const formSchema = z.object({
-  fullName: z.string().min(2, "Name must be at least 2 characters").max(100),
-  contactNumber: z.string().min(10, "Enter a valid contact number").max(20),
-  email: z.string().email("Enter a valid email address").max(255),
+  fullName: z.string().min(2, "Name must be at least 2 characters").max(100).trim(),
+  contactNumber: z.string().min(10, "Enter a valid contact number").max(20).trim(),
+  email: z.string().email("Enter a valid email address").max(255).trim(),
   linkedinProfile: z.string().max(500).optional(),
-  designation: z.string().min(2, "Designation is required").max(100),
-  business: z.string().min(2, "Business/Organization is required").max(200),
+  designation: z.string().min(2, "Designation is required").max(100).trim(),
+  business: z.string().min(2, "Business/Organization is required").max(200).trim(),
   sectors: z.array(z.string()).min(1, "Select at least one sector"),
   otherSector: z.string().max(100).optional(),
-  experience: z.string().min(1, "Experience is required").max(50),
+  experience: z.string().min(1, "Experience is required").max(50).trim(),
   achievements: z.string().max(1000).optional(),
-  futurePlan: z.string().min(10, "Please share your 5-year plan").max(1000),
+  futurePlan: z.string().min(10, "Please share your 5-year plan").max(1000).trim(),
+  dateOfBirth: z.string().min(1, "Date of birth is required"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -62,19 +63,42 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    
-    console.log("Form submitted:", { ...data, sectors: selectedSectors });
-    
-    toast.success("Registration Successful!", {
-      description: "We'll contact you shortly with workshop details.",
-    });
-    
-    setIsSubmitting(false);
-    reset();
-    setSelectedSectors([]);
-    onClose();
+    try {
+      const registrationData = {
+        ...data,
+        sectors: selectedSectors,
+      };
+      
+      const response = await fetch('http://localhost:3000/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registrationData),
+      });
+
+      if (!response.ok) throw new Error('Registration failed');
+      
+      const attendee = await response.json();
+      
+      toast.success("Registration Successful!", {
+        description: "Redirecting to your e-pass...",
+      });
+      
+      localStorage.setItem("attendee", JSON.stringify(attendee));
+      
+      reset();
+      setSelectedSectors([]);
+      onClose();
+      
+      setTimeout(() => {
+        window.location.href = '/ticket';
+      }, 1500);
+    } catch (error) {
+      toast.error("Registration Failed", {
+        description: "Please try again or contact support.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSectorToggle = (sector: string) => {
@@ -171,6 +195,19 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
                   placeholder="https://linkedin.com/in/yourprofile"
                   className="bg-background border-border focus:border-primary transition-colors h-12"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dateOfBirth">Date of Birth *</Label>
+                <Input
+                  id="dateOfBirth"
+                  type="date"
+                  {...register("dateOfBirth")}
+                  className="bg-background border-border focus:border-primary transition-colors h-12"
+                />
+                {errors.dateOfBirth && (
+                  <p className="text-sm text-destructive">{errors.dateOfBirth.message}</p>
+                )}
               </div>
             </div>
           </div>
