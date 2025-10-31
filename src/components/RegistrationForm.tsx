@@ -25,17 +25,14 @@ const formSchema = z.object({
     .trim(),
   linkedinProfile: z.string()
     .max(500, "LinkedIn URL too long")
-    .regex(/^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/, "Enter a valid LinkedIn URL")
     .optional()
     .or(z.literal("")),
   designation: z.string().min(2, "Designation is required").max(100).trim(),
   business: z.string().min(2, "Business/Organization is required").max(200).trim(),
-  sectors: z.array(z.string()).min(1, "Select at least one sector"),
   otherSector: z.string().max(100).optional(),
   experience: z.string()
     .min(1, "Experience is required")
     .max(50)
-    .regex(/^[\d\+\-\s]+$/, "Enter valid experience (e.g., 5 years)")
     .trim(),
   achievements: z.string().max(1000, "Achievements too long (max 1000 characters)").optional(),
   futurePlan: z.string()
@@ -93,10 +90,15 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
   });
 
   const onSubmit = async (data: FormData) => {
+    // Validate sectors before submission
+    if (selectedSectors.length === 0) {
+      toast.error("Please select at least one sector");
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
-      // Clean up the data before submission
       const cleanData = {
         fullName: data.fullName,
         email: data.email,
@@ -110,25 +112,29 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
         dateOfBirth: data.dateOfBirth,
         linkedinProfile: data.linkedinProfile || undefined,
         otherSector: data.otherSector || undefined,
-        registrationDate: new Date().toISOString(),
-        paymentStatus: 'pending'
       };
       
       const result = await apiService.registerAttendee(cleanData);
       
-      if (result.success) {
-        console.log("Registration successful:", result);
-        toast.success("Registration successful! Welcome to Kaisan Network.");
-        setShowSuccess(true);
+      if (result.success && result.data) {
+        toast.success("Registration successful! Redirecting to your e-pass...");
+        
+        // Store attendee data and redirect to ticket
+        localStorage.setItem("attendee", JSON.stringify(result.data));
+        
         reset();
         setSelectedSectors([]);
         setCurrentStep(1);
         onClose();
+        
+        // Navigate to ticket page after a short delay
+        setTimeout(() => {
+          window.location.href = '/ticket';
+        }, 1500);
       } else {
-        throw new Error(result.message || "Registration failed");
+        throw new Error(result.error || "Registration failed");
       }
     } catch (error: any) {
-      console.error("Registration error:", error);
       const errorMessage = error.message || "Registration failed. Please try again.";
       toast.error(errorMessage);
     } finally {
@@ -137,13 +143,18 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
   };
 
   const nextStep = async () => {
-    const fieldsToValidate = currentStep === 1 
-      ? ["fullName", "contactNumber", "email", "dateOfBirth"]
-      : ["designation", "business", "experience", "sectors"];
-    
-    const isValid = await trigger(fieldsToValidate as any);
-    if (isValid) {
-      setCurrentStep(prev => Math.min(prev + 1, 3));
+    if (currentStep === 1) {
+      const isValid = await trigger(["fullName", "contactNumber", "email", "dateOfBirth"] as any);
+      if (isValid) {
+        setCurrentStep(2);
+      }
+    } else if (currentStep === 2) {
+      const isValid = await trigger(["designation", "business", "experience"] as any);
+      if (isValid && selectedSectors.length > 0) {
+        setCurrentStep(3);
+      } else if (selectedSectors.length === 0) {
+        toast.error("Please select at least one sector");
+      }
     }
   };
 

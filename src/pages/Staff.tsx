@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Scan, CheckCircle, XCircle } from "lucide-react";
+import { ArrowLeft, Scan, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
-import { apiService } from "@/lib/api";
+import { toast } from "sonner";
 import kaisanLogo from "@/assets/kaisan-logo.png";
 
 const Staff = () => {
@@ -13,59 +12,42 @@ const Staff = () => {
   const [qrCode, setQrCode] = useState("");
   const [isScanning, setIsScanning] = useState(false);
   const [lastScanned, setLastScanned] = useState<any>(null);
-  const { toast } = useToast();
 
   const handleLogin = () => {
     if (!staffKey.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter staff key",
-        variant: "destructive",
-      });
+      toast.error("Please enter staff key");
       return;
     }
     setIsAuthenticated(true);
-    toast({
-      title: "Success",
-      description: "Staff access granted",
-    });
+    toast.success("Staff access granted");
   };
 
   const handleScan = async () => {
     if (!qrCode.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter QR code",
-        variant: "destructive",
-      });
+      toast.error("Please enter QR code");
       return;
     }
 
     setIsScanning(true);
     try {
-      // Simulate attendance marking
-      // In production, you would call the API
+      // In production, call your API endpoint to mark attendance
+      // const response = await fetch(`/api/attendees/${qrCode}`, { method: 'PUT', ... });
+      
       const mockAttendee = {
         _id: "mock-id-" + Date.now(),
-        name: "John Doe",
+        fullName: "John Doe",
         email: "john@example.com",
-        phone: "+1234567890",
+        contactNumber: "+1234567890",
         designation: "Business Owner",
         business: "Tech Solutions",
         attended: true
       };
+      
       setLastScanned(mockAttendee);
       setQrCode("");
-      toast({
-        title: "Success!",
-        description: `${mockAttendee.name} marked as attended`,
-      });
+      toast.success(`${mockAttendee.fullName} marked as attended`);
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Invalid QR code or already scanned",
-        variant: "destructive",
-      });
+      toast.error("Invalid QR code or already scanned");
     } finally {
       setIsScanning(false);
     }
@@ -74,15 +56,15 @@ const Staff = () => {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
-        <div className="w-full max-w-md glass-panel p-8 animate-fade-in">
+        <div className="w-full max-w-md glass-panel p-8 md:p-10 animate-fade-in">
           <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-6 transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Link>
           <div className="text-center mb-8">
-            <img src={kaisanLogo} alt="Kaisan Associates" className="h-16 mx-auto mb-4 object-contain" />
-            <h1 className="text-3xl font-bold gradient-text">Staff Scanner</h1>
-            <p className="text-muted-foreground mt-2">Enter staff key to access</p>
+            <img src={kaisanLogo} alt="Kaisan Associates" className="h-16 mx-auto mb-6 object-contain" />
+            <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2">Staff Scanner</h1>
+            <p className="text-muted-foreground">Enter staff key to access</p>
           </div>
           <Input
             type="password"
@@ -90,9 +72,9 @@ const Staff = () => {
             value={staffKey}
             onChange={(e) => setStaffKey(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-            className="mb-4"
+            className="mb-4 h-12"
           />
-          <Button onClick={handleLogin} className="w-full">
+          <Button onClick={handleLogin} className="w-full h-12 font-semibold">
             Login
           </Button>
         </div>
@@ -101,13 +83,18 @@ const Staff = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <main className="container mx-auto px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      <main className="container mx-auto px-4 py-8 md:py-12">
+        <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-6 transition-colors">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Link>
+
         <div className="max-w-2xl mx-auto">
-          <div className="glass-panel p-8 text-center">
-            <Scan className="w-16 h-16 mx-auto mb-6 text-primary" />
-            <h2 className="text-2xl font-bold mb-4">Scan Attendee QR Code</h2>
-            <p className="text-muted-foreground mb-8">
+          <div className="glass-panel p-6 md:p-8 text-center">
+            <Scan className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-6 text-primary" />
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">Scan Attendee QR Code</h2>
+            <p className="text-muted-foreground mb-8 text-sm md:text-base">
               Enter or scan the QR code from the attendee's e-pass
             </p>
 
@@ -117,25 +104,25 @@ const Staff = () => {
                 value={qrCode}
                 onChange={(e) => setQrCode(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleScan()}
-                className="text-lg"
+                className="text-base md:text-lg h-12 md:h-14"
                 autoFocus
               />
-              <Button onClick={handleScan} className="w-full" size="lg" disabled={isScanning}>
+              <Button onClick={handleScan} className="w-full h-12 md:h-14 text-base font-semibold" size="lg" disabled={isScanning}>
                 {isScanning ? "Scanning..." : "Mark Attendance"}
               </Button>
             </div>
           </div>
 
           {lastScanned && (
-            <div className="mt-8 glass-panel p-6 animate-scale-in">
-              <div className="flex items-center gap-4 mb-4">
-                <CheckCircle className="w-8 h-8 text-green-500" />
-                <div>
-                  <h3 className="text-xl font-bold">{lastScanned.fullName}</h3>
-                  <p className="text-sm text-muted-foreground">{lastScanned.email}</p>
+            <div className="mt-8 glass-panel p-6 md:p-8 animate-scale-in">
+              <div className="flex items-center gap-4 mb-6">
+                <CheckCircle className="w-8 h-8 md:w-10 md:h-10 text-green-500 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl md:text-2xl font-bold truncate">{lastScanned.fullName}</h3>
+                  <p className="text-sm text-muted-foreground truncate">{lastScanned.email}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm md:text-base">
                 <div>
                   <p className="text-muted-foreground">Designation</p>
                   <p className="font-medium">{lastScanned.designation}</p>

@@ -6,7 +6,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import NavigationBar from "@/components/NavigationBar";
 import Index from "./pages/Index";
 import About from "./pages/About";
-import AdminLogin from "./pages/AdminLogin";
 import TicketAccess from "./pages/TicketAccess";
 import Ticket from "./pages/Ticket";
 import Admin from "./pages/Admin";
@@ -31,7 +30,6 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
-              <Route path="/login" element={<AdminLogin />} />
               <Route path="/ticket-access" element={<TicketAccess />} />
               <Route path="/ticket" element={<Ticket />} />
               <Route path="/admin" element={<Admin />} />

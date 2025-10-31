@@ -13,7 +13,7 @@ const Ticket = () => {
   useEffect(() => {
     const stored = localStorage.getItem("attendee");
     if (!stored) {
-      navigate("/login");
+      navigate("/ticket-access");
       return;
     }
     setAttendee(JSON.parse(stored));
@@ -26,16 +26,20 @@ const Ticket = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 py-8 md:py-12 px-4">
       <div className="container mx-auto max-w-4xl">
+        <Link to="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-primary mb-6 transition-colors">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to Home
+        </Link>
 
-        <div className="glass-panel p-8 md:p-12 animate-scale-in">
+        <div className="glass-panel p-6 md:p-12 animate-scale-in">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8 pb-8 border-b border-border">
-            <img src={kaisanLogo} alt="Kaisan Associates" className="h-16 object-contain" />
-            <div className="text-right">
-              <h1 className="text-2xl font-bold gradient-text">INFLUENCIA</h1>
-              <p className="text-sm text-muted-foreground">Edition 2</p>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8 pb-8 border-b border-border">
+            <img src={kaisanLogo} alt="Kaisan Associates" className="h-12 md:h-16 object-contain" />
+            <div className="text-center md:text-right">
+              <h1 className="text-2xl md:text-3xl font-bold gradient-text">INFLUENCIA</h1>
+              <p className="text-sm text-muted-foreground">Edition 2 - 2025</p>
             </div>
           </div>
 
@@ -43,9 +47,9 @@ const Ticket = () => {
             {/* Left Column - Attendee Details */}
             <div className="space-y-6">
               <div>
-                <h2 className="text-3xl font-bold mb-2">{attendee.fullName}</h2>
-                <p className="text-muted-foreground">{attendee.designation}</p>
-                <p className="text-muted-foreground">{attendee.business}</p>
+                <h2 className="text-2xl md:text-3xl font-bold mb-2">{attendee.fullName}</h2>
+                <p className="text-sm md:text-base text-muted-foreground">{attendee.designation}</p>
+                <p className="text-sm md:text-base text-muted-foreground">{attendee.business}</p>
               </div>
 
               <div className="space-y-3">
@@ -82,19 +86,19 @@ const Ticket = () => {
 
             {/* Right Column - QR Code */}
             <div className="flex flex-col items-center justify-center">
-              <div className="bg-white p-6 rounded-xl shadow-lg">
+              <div className="bg-white p-4 md:p-6 rounded-xl shadow-lg">
                 <QRCodeSVG
                   value={attendee.qrCode}
-                  size={220}
+                  size={window.innerWidth < 768 ? 180 : 220}
                   level="H"
                   includeMargin
                 />
               </div>
-              <p className="text-xs text-muted-foreground mt-4 text-center">
-                Show this QR code at the venue entrance
+              <p className="text-xs text-muted-foreground mt-4 text-center max-w-xs">
+                Show this QR code at the venue entrance for quick check-in
               </p>
               <p className="text-xs text-muted-foreground font-mono mt-2">
-                {attendee.qrCode.slice(0, 16)}...
+                ID: {attendee.qrCode.slice(0, 16)}...
               </p>
             </div>
           </div>
@@ -108,9 +112,9 @@ const Ticket = () => {
 
           {/* Download Button */}
           <div className="mt-6 text-center print:hidden">
-            <Button onClick={handleDownload} size="lg">
+            <Button onClick={handleDownload} size="lg" className="w-full md:w-auto">
               <Download className="w-4 h-4 mr-2" />
-              Download E-Pass
+              Download / Print E-Pass
             </Button>
           </div>
         </div>

@@ -35,9 +35,8 @@ const NavigationBar = () => {
   const navItems = [
     { name: 'Home', href: '/', icon: Calendar },
     { name: 'About', href: '/about', icon: Info },
-    { name: 'Register', href: '#', icon: Users, onClick: handleRegisterClick }, // Registration opens modal on home page
-    { name: 'E-Pass', href: '/ticket', icon: Ticket },
-    { name: 'Login', href: '/login', icon: LogIn },
+    { name: 'Register', href: '#', icon: Users, onClick: handleRegisterClick },
+    { name: 'My E-Pass', href: '/ticket-access', icon: Ticket },
   ];
 
   return (
