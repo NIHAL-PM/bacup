@@ -92,6 +92,14 @@ module.exports = async function handler(req, res) {
         sectors, experience, achievements, futurePlan
       } = req.body;
       
+      console.log('📝 UPDATE REQUEST - Body fields received:', {
+        attended, checkInTime, deleted, paymentStatus,
+        name, fullName, email, phone, contactNumber,
+        business, organization, designation, dateOfBirth,
+        hasSectors: !!sectors, hasExperience: !!experience,
+        hasAchievements: !!achievements, hasFuturePlan: !!futurePlan
+      });
+      
       const updateData = {};
       if (attended !== undefined) updateData.attended = attended;
       if (checkInTime) updateData.checkInTime = new Date(checkInTime);
@@ -113,11 +121,16 @@ module.exports = async function handler(req, res) {
       if (achievements) updateData.achievements = achievements;
       if (futurePlan) updateData.futurePlan = futurePlan;
       
+      console.log('📝 Fields to update:', Object.keys(updateData));
+      console.log('📝 Update data:', updateData);
+      
       const updatedRegistration = await Registration.findByIdAndUpdate(
         attendeeId,
         updateData,
         { new: true }
       );
+      
+      console.log('✅ Update successful:', !!updatedRegistration);
       
       if (!updatedRegistration) {
         return res.status(404).json({

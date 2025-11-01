@@ -142,31 +142,47 @@ const Admin = () => {
   const handleSaveEdit = async () => {
     if (!editedAttendee) return;
     
+    setIsLoading(true);
     try {
+      console.log('Saving attendee:', editedAttendee);
+      
+      const updateData = {
+        name: editedAttendee.fullName || editedAttendee.name,
+        fullName: editedAttendee.fullName,
+        email: editedAttendee.email,
+        phone: editedAttendee.contactNumber || editedAttendee.phone,
+        contactNumber: editedAttendee.contactNumber,
+        business: editedAttendee.business,
+        organization: editedAttendee.organization,
+        designation: editedAttendee.designation,
+        dateOfBirth: editedAttendee.dateOfBirth,
+        sectors: editedAttendee.sectors,
+        experience: editedAttendee.experience,
+        achievements: editedAttendee.achievements,
+        futurePlan: editedAttendee.futurePlan
+      };
+      
+      console.log('Update data:', updateData);
+      
       const response = await fetch(`/api/attendees/${editedAttendee._id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${adminKey}`
         },
-        body: JSON.stringify({
-          name: editedAttendee.fullName || editedAttendee.name,
-          fullName: editedAttendee.fullName,
-          email: editedAttendee.email,
-          phone: editedAttendee.contactNumber || editedAttendee.phone,
-          contactNumber: editedAttendee.contactNumber,
-          business: editedAttendee.business,
-          organization: editedAttendee.organization,
-          designation: editedAttendee.designation,
-          dateOfBirth: editedAttendee.dateOfBirth,
-          sectors: editedAttendee.sectors,
-          experience: editedAttendee.experience,
-          achievements: editedAttendee.achievements,
-          futurePlan: editedAttendee.futurePlan
-        })
+        body: JSON.stringify(updateData)
       });
       
+      console.log('Response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`HTTP ${response.status}: ${errorText}`);
+      }
+      
       const result = await response.json();
+      console.log('Result:', result);
       
       if (result.success) {
         const updated = attendees.map((a) => 
@@ -180,8 +196,11 @@ const Admin = () => {
       } else {
         throw new Error(result.error || 'Failed to update attendee');
       }
-    } catch (error) {
-      toast.error("Failed to update attendee");
+    } catch (error: any) {
+      console.error('Update error:', error);
+      toast.error(error.message || "Failed to update attendee");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -569,14 +588,21 @@ const Admin = () => {
                 {/* Action Buttons */}
                 {isEditMode && (
                   <div className="flex gap-2 justify-end pt-4 border-t">
-                    <Button variant="outline" onClick={() => {
-                      setIsEditMode(false);
-                      setEditedAttendee({...selectedAttendee});
-                    }}>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => {
+                        setIsEditMode(false);
+                        setEditedAttendee({...selectedAttendee});
+                      }}
+                      disabled={isLoading}
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={handleSaveEdit}>
-                      Save Changes
+                    <Button 
+                      onClick={handleSaveEdit}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? 'Saving...' : 'Save Changes'}
                     </Button>
                   </div>
                 )}
