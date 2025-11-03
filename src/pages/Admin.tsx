@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit } from "lucide-react";
+import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import kaisanLogo from "@/assets/kaisan-logo.png";
+import * as XLSX from "xlsx";
 
 const Admin = () => {
   const [attendees, setAttendees] = useState<any[]>([]);
@@ -126,6 +127,101 @@ const Admin = () => {
     } catch (error) {
       toast.error("Failed to confirm payment");
     }
+  };
+
+  // Export filtered attendees to CSV (Excel-compatible)
+  const handleExportCSV = () => {
+    const rows = filteredAttendees.length ? filteredAttendees : attendees;
+    if (!rows.length) {
+      toast.error("No records to export");
+      return;
+    }
+
+    const headers = [
+      'NAME','EMAIL','PHONE','BUSINESS','DESIGNATION','SECTORS','PAYMENT STATUS','ATTENDED','REGISTRATION DATE','CHECK-IN TIME','QR CODE'
+    ];
+
+    const esc = (val: any) => {
+      if (val === null || val === undefined) return '';
+      const s = String(val).replace(/"/g, '""');
+      return `"${s}"`;
+    };
+
+    const csvLines = [headers.join(',')];
+    for (const a of rows) {
+      const line = [
+        esc(a.fullName || a.name),
+        esc(a.email),
+        esc(a.contactNumber || a.phone),
+        esc(a.business || a.organization || ''),
+        esc(a.designation || ''),
+        esc(Array.isArray(a.sectors) ? a.sectors.join('; ') : ''),
+        esc(a.paymentStatus || 'pending'),
+        esc(a.attended ? 'YES' : 'NO'),
+        esc(a.registrationDate ? new Date(a.registrationDate).toLocaleString() : ''),
+        esc(a.checkInTime ? new Date(a.checkInTime).toLocaleString() : ''),
+        esc(a.qrCode || '')
+      ].join(',');
+      csvLines.push(line);
+    }
+
+    const csvContent = csvLines.join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const ts = new Date().toISOString().replace(/[:T]/g,'-').slice(0,16);
+    a.href = url;
+    a.download = `influencia-registrations-${ts}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success('Export generated');
+  };
+
+  const handleExportExcel = () => {
+    const headers = [
+      "Name",
+      "Email",
+      "Phone",
+      "Business",
+      "Designation",
+      "Sectors",
+      "Payment Status",
+      "Attended",
+      "Registration Date",
+      "Check-in Time",
+      "QR Code",
+    ];
+
+    const data = attendees.map((attendee) => [
+      attendee.fullName || attendee.name,
+      attendee.email,
+      attendee.contactNumber || attendee.phone,
+      attendee.business || attendee.organization,
+      attendee.designation,
+      attendee.sectors?.join(", "),
+      attendee.paymentStatus.toUpperCase(),
+      attendee.attended ? "Yes" : "No",
+      new Date(attendee.registrationDate).toLocaleDateString(),
+      attendee.checkInTime ? new Date(attendee.checkInTime).toLocaleString() : "N/A",
+      attendee.qrCode,
+    ]);
+
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Registrations");
+
+    // Set column widths
+    worksheet["!cols"] = headers.map(() => ({ wch: 20 }));
+
+    // Generate and download the Excel file
+    const filename = `influencia-registrations-${new Date()
+      .toISOString()
+      .slice(0, 16)
+      .replace("T", "-")
+      .replace(":", "-")}.xlsx`;
+    XLSX.writeFile(workbook, filename);
   };
 
   const handleViewAttendee = (attendee: any) => {
@@ -293,14 +389,24 @@ const Admin = () => {
             </div>
           </div>
 
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-            <Input
-              placeholder="Search by name, email, or phone..."
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="pl-10"
-            />
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+              <Input
+                placeholder="Search by name, email, or phone..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button onClick={handleExportCSV} className="h-12 md:h-10">
+              <FileDown className="w-4 h-4 mr-2" />
+              Export to CSV
+            </Button>
+            <Button onClick={handleExportExcel} className="h-12 md:h-10">
+              <FileDown className="w-4 h-4 mr-2" />
+              Export to Excel
+            </Button>
           </div>
         </div>
 
