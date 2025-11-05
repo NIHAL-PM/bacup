@@ -71,7 +71,7 @@ const Hero = ({ onRegisterClick }: HeroProps) => {
                 <span className="ml-2 group-hover:translate-x-1 transition-transform inline-block">→</span>
               </Button>
               
-              <Link to="/login" className="w-full sm:w-auto">
+              <Link to="/ticket-access" className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   variant="outline"
