@@ -198,14 +198,14 @@ const Ticket = () => {
         <div id="epass-container" className="glass-panel overflow-hidden animate-scale-in">
           <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 border-b-2 border-primary/20 p-4 sm:p-6">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 self-start sm:self-center">
                 <img src={kaisanLogo} alt="KAISAN ASSOCIATES" className="h-14 sm:h-16 md:h-20 object-contain" />
                 <div className="border-l-2 border-primary/30 pl-4">
                   <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold gradient-text tracking-tight uppercase break-words">INFLUENCIA</h1>
                   <p className="text-xs sm:text-sm md:text-base text-muted-foreground font-medium uppercase">EDITION 2.0 • 2025</p>
                 </div>
               </div>
-              <div className="text-center sm:text-right">
+              <div className="text-center sm:text-right self-end sm:self-center">
                 <div className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm font-semibold uppercase ${
                   attendee.attended 
                     ? 'bg-green-500/20 text-green-700 border border-green-500/30' 
