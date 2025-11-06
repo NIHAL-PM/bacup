@@ -717,12 +717,8 @@ const Admin = () => {
                   <h3 className="text-lg font-semibold mb-4">Additional Information</h3>
                   <div className="space-y-4">
                     <div>
-                      <Label>Achievements</Label>
-                      <p className="mt-1 text-sm whitespace-pre-wrap">{selectedAttendee.achievements || 'N/A'}</p>
-                    </div>
-                    <div>
-                      <Label>Future Plans</Label>
-                      <p className="mt-1 text-sm whitespace-pre-wrap">{selectedAttendee.futurePlan || 'N/A'}</p>
+                      <Label>Expectations</Label>
+                      <p className="mt-1 text-sm whitespace-pre-wrap">{selectedAttendee.achievements || selectedAttendee.futurePlan || 'N/A'}</p>
                     </div>
                   </div>
                 </div>

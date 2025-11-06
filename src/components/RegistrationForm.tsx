@@ -38,9 +38,8 @@ const formSchema = z.object({
     .min(1, "Experience is required")
     .max(50)
     .trim(),
-  achievements: z.string().max(1000, "Achievements too long (max 1000 characters)").optional(),
-  futurePlan: z.string()
-    .max(1000, "Future plan too long (max 1000 characters)")
+  expectations: z.string()
+    .max(1000, "Expectations too long (max 1000 characters)")
     .optional()
     .or(z.literal("")),
   dateOfBirth: z.string()
@@ -107,8 +106,9 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
         sectors: selectedSectors,
         designation: data.designation,
         experience: data.experience,
-        achievements: data.achievements || undefined,
-        futurePlan: data.futurePlan,
+  // Map expectations to both legacy fields for backend compatibility
+  achievements: data.expectations || undefined,
+  futurePlan: data.expectations || undefined,
         dateOfBirth: data.dateOfBirth,
         linkedinProfile: data.linkedinProfile || undefined,
         otherSector: data.otherSector || undefined,
@@ -426,28 +426,14 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
 
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="achievements">Key Achievements / Milestones</Label>
+                  <Label htmlFor="expectations">Expectations from the Session</Label>
                   <Textarea
-                    id="achievements"
-                    {...register("achievements")}
-                    placeholder="Share your notable achievements and milestones..."
-                    rows={4}
+                    id="expectations"
+                    {...register("expectations")}
+                    placeholder="Tell us what you expect to learn or achieve from this session..."
+                    rows={6}
                     className="bg-background border-border focus:border-primary transition-colors resize-none"
                   />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="futurePlan">Future Plan for Next 5 Years</Label>
-                  <Textarea
-                    id="futurePlan"
-                    {...register("futurePlan")}
-                    placeholder="Describe your vision and goals for the next 5 years..."
-                    rows={4}
-                    className="bg-background border-border focus:border-primary transition-colors resize-none"
-                  />
-                  {errors.futurePlan && (
-                    <p className="text-sm text-destructive">{errors.futurePlan.message}</p>
-                  )}
                 </div>
               </div>
             </div>
