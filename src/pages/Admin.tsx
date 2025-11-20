@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit, FileDown, Ticket, MessageCircle } from "lucide-react";
+import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit, FileDown, Ticket, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import kaisanLogo from "@/assets/kaisan-logo.png";
 import * as XLSX from "xlsx";
 import WhatsAppIntegration from "@/components/WhatsAppIntegration";
+import BulkWhatsAppMessaging from "@/components/BulkWhatsAppMessaging";
 
 const Admin = () => {
   const [attendees, setAttendees] = useState<any[]>([]);
@@ -37,6 +38,7 @@ const Admin = () => {
   const [isVolunteerDialogOpen, setIsVolunteerDialogOpen] = useState(false);
   const [isVolunteerEditMode, setIsVolunteerEditMode] = useState(false);
   const [editedVolunteer, setEditedVolunteer] = useState<any>(null);
+  const [isBulkMessagingOpen, setIsBulkMessagingOpen] = useState(false);
 
   const handleViewEpass = (attendee: any) => {
     localStorage.setItem("attendee", JSON.stringify(attendee));
@@ -528,6 +530,15 @@ const Admin = () => {
             >
               <Ticket className="w-4 h-4 mr-2" />
               Download E-Passes ({selectedIds.length})
+            </Button>
+            <Button 
+              onClick={() => setIsBulkMessagingOpen(true)} 
+              variant="outline" 
+              className="h-12 md:h-10 rounded-full"
+              disabled={selectedIds.length === 0}
+            >
+              <Send className="w-4 h-4 mr-2" />
+              Bulk WhatsApp ({selectedIds.length})
             </Button>
           </div>
         </div>
@@ -1095,6 +1106,22 @@ const Admin = () => {
                 )}
               </div>
             )}
+          </DialogContent>
+        </Dialog>
+
+        {/* Bulk WhatsApp Messaging Dialog */}
+        <Dialog open={isBulkMessagingOpen} onOpenChange={setIsBulkMessagingOpen}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Bulk WhatsApp Messaging</DialogTitle>
+              <DialogDescription>
+                Send WhatsApp messages to selected attendees ({selectedIds.length})
+              </DialogDescription>
+            </DialogHeader>
+            <BulkWhatsAppMessaging
+              selectedIds={selectedIds}
+              onClose={() => setIsBulkMessagingOpen(false)}
+            />
           </DialogContent>
         </Dialog>
       </main>
