@@ -3,7 +3,8 @@ const connectDB = require('./lib/mongoose.cjs');
 
 const registrationSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  // Allow same email across multiple registrations; uniqueness now composite with dateOfBirth
+  email: { type: String, required: true },
   phone: { type: String, required: true },
   organization: String,
   ticketType: { type: String, enum: ['standard', 'premium', 'vip'], default: 'standard' },
@@ -36,6 +37,8 @@ const registrationSchema = new mongoose.Schema({
   qrCode: String
 });
 
+registrationSchema.index({ email: 1, dateOfBirth: 1 }, { unique: true });
+
 const Registration = mongoose.models.Registration || mongoose.model('Registration', registrationSchema);
 
 function generateQRCode(registrationId) {
@@ -63,7 +66,7 @@ module.exports = async function handler(req, res) {
     await connectDB();
     
     const body = req.body;
-    const { name, email, phone, ticketType } = body;
+    const { name, email, phone, ticketType, dateOfBirth } = body;
     
     // Use extended fields if provided, otherwise fall back to basic ones
     const finalName = body.fullName || name;
@@ -71,10 +74,10 @@ module.exports = async function handler(req, res) {
     const finalOrganization = body.business || body.organization || '';
     
     // Validate required fields
-    if (!finalName || !email || !finalPhone) {
+    if (!finalName || !email || !finalPhone || !dateOfBirth) {
       return res.status(400).json({
         success: false,
-        error: 'Missing required fields: name, email, and phone are required'
+        error: 'Missing required fields: name, email, phone, and dateOfBirth are required'
       });
     }
 
@@ -87,12 +90,17 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // Check if email already exists
-    const existingRegistration = await Registration.findOne({ email });
-    if (existingRegistration) {
+    // Count all registrations with this email (for messaging)
+    const totalEmailCount = await Registration.countDocuments({ email });
+    // Reject only if SAME email + SAME dateOfBirth already exists
+    const existingExact = await Registration.findOne({ email, dateOfBirth });
+    if (existingExact) {
       return res.status(409).json({
         success: false,
-        error: 'Email already registered'
+        error: 'A registration already exists for this email and date of birth',
+        message: `User already registered with this email and date of birth. Total registrations with this email: ${totalEmailCount}`,
+        duplicate: true,
+        duplicatesWithEmail: totalEmailCount
       });
     }
 

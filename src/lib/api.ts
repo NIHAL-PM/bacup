@@ -67,12 +67,19 @@ class ApiService {
         },
         body: JSON.stringify(transformedData),
       });
-
+      // Always parse JSON to surface backend duplicate messages
+      const result = await response.json().catch(() => ({ success: false, error: 'Invalid server response' }));
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // Ensure consistent shape with duplicate metadata if provided
+        return {
+          success: false,
+          error: result.error || `Registration failed (${response.status})`,
+          message: result.message,
+          duplicate: result.duplicate || false,
+          duplicatesWithEmail: result.duplicatesWithEmail
+        } as any;
       }
-
-      return await response.json();
+      return result;
     } catch (error) {
       console.error('Registration API error:', error);
       return {
@@ -140,12 +147,17 @@ class ApiService {
         },
         body: JSON.stringify(data),
       });
-
+      const result = await response.json().catch(() => ({ success: false, error: 'Invalid server response' }));
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        return {
+          success: false,
+          error: result.error || `Registration failed (${response.status})`,
+          message: result.message,
+          duplicate: result.duplicate || false,
+          duplicatesWithEmail: (result as any).duplicatesWithEmail
+        } as any;
       }
-
-      return await response.json();
+      return result;
     } catch (error) {
       console.error('Registration API error:', error);
       return {

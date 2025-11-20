@@ -117,29 +117,12 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
       const result = await apiService.registerAttendee(cleanData);
       
       if (result.success && result.data) {
-        // Merge the submitted data with the server response to ensure all fields are present
-        const completeAttendeeData = {
-          ...cleanData,
-          ...result.data,
-          fullName: result.data.fullName || result.data.name || cleanData.fullName,
-          contactNumber: result.data.contactNumber || result.data.phone || cleanData.contactNumber,
-          business: result.data.business || result.data.organization || cleanData.business,
-        };
-        
-        toast.success("Registration successful! Redirecting to your e-pass...");
-        
-        // Store complete attendee data and redirect to ticket
-        localStorage.setItem("attendee", JSON.stringify(completeAttendeeData));
-        
+        toast.success("Registration successful!");
+        setShowSuccess(true);
         reset();
         setSelectedSectors([]);
         setCurrentStep(1);
-        onClose();
-        
-        // Navigate to ticket page after a short delay
-        setTimeout(() => {
-          window.location.href = '/ticket';
-        }, 1500);
+        return;
       } else {
         throw new Error(result.error || "Registration failed");
       }
@@ -504,6 +487,30 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
             )}
           </div>
         </form>
+
+        {/* Add a success splash screen after registration */}
+        {showSuccess && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowSuccess(false)} />
+            <div className="relative w-full max-w-md bg-white dark:bg-card rounded-3xl shadow-2xl animate-scale-in border border-border/50 p-8 text-center">
+              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full">
+                <Check className="w-10 h-10 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-foreground">Registration Complete!</h2>
+              <p className="mt-2 text-sm text-muted-foreground">Thank you for registering. Your details have been successfully submitted.</p>
+              <Button
+                type="button"
+                className="mt-6 bg-primary hover:bg-primary/90 text-white font-semibold py-3 px-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                onClick={() => {
+                  setShowSuccess(false);
+                  window.location.href = '/ticket';
+                }}
+              >
+                View Your Ticket
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
