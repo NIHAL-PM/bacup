@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit, FileDown, Ticket } from "lucide-react";
+import { ArrowLeft, Search, Trash2, CheckCircle, XCircle, DollarSign, Eye, Edit, FileDown, Ticket, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import kaisanLogo from "@/assets/kaisan-logo.png";
 import * as XLSX from "xlsx";
+import WhatsAppIntegration from "@/components/WhatsAppIntegration";
 
 const Admin = () => {
   const [attendees, setAttendees] = useState<any[]>([]);
@@ -896,6 +897,18 @@ const Admin = () => {
                       </div>
                     )}
                   </div>
+                </div>
+
+                {/* WhatsApp Messaging */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 flex items-center">
+                    <MessageCircle className="w-5 h-5 mr-2" />
+                    WhatsApp Messaging
+                  </h3>
+                  <WhatsAppIntegration 
+                    registrationId={selectedAttendee._id}
+                    attendee={selectedAttendee}
+                  />
                 </div>
 
                 {/* Action Buttons */}
