@@ -790,9 +790,9 @@ const AboutInfluencia = () => {
               <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
             </Button>
             
-            <div className="text-left">
+              <div className="text-left">
               <p className="text-sm text-gray-500 line-through">₹4,999</p>
-              <p className="text-3xl font-black text-red-600">Early Bird: ₹2,999</p>
+              <p className="text-3xl font-black text-red-600">Early Bird: ₹3,999</p>
             </div>
           </div>
 
