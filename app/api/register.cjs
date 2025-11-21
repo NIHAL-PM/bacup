@@ -179,10 +179,19 @@ module.exports = async function handler(req, res) {
 
   } catch (error) {
     console.error('Registration error:', error);
+    // In non-production or when DEBUG env var is set, return error details to aid debugging
+    const showDebug = process.env.DEBUG === 'true' || (process.env.VERCEL_ENV || 'development') !== 'production';
+    if (showDebug) {
+      return res.status(500).json({
+        success: false,
+        error: error && error.message ? error.message : 'Internal server error',
+        stack: error && error.stack ? error.stack.split('\n').slice(0,6) : undefined
+      });
+    }
+
     return res.status(500).json({
       success: false,
-      error: error.message || 'Internal server error',
-      details: error.stack
+      error: 'Internal server error'
     });
   }
 }

@@ -183,6 +183,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   } catch (error) {
     console.error('Registration error:', error);
+    // In non-production or when DEBUG env var is set, return error details to aid debugging
+    const showDebug = process.env.DEBUG === 'true' || (process.env.VERCEL_ENV || 'development') !== 'production';
+    if (showDebug) {
+      return res.status(500).json({
+        success: false,
+        error: error?.message || 'Internal server error',
+        stack: error?.stack?.split('\n').slice(0, 6)
+      });
+    }
+
     return res.status(500).json({
       success: false,
       error: 'Internal server error'

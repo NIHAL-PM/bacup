@@ -117,6 +117,13 @@ const RegistrationForm = ({ isOpen, onClose }: RegistrationFormProps) => {
       const result = await apiService.registerAttendee(cleanData);
       
       if (result.success && result.data) {
+        // Persist newly created attendee so the Ticket page can load the correct e-pass
+        try {
+          localStorage.setItem('attendee', JSON.stringify(result.data));
+        } catch (e) {
+          console.warn('Failed to persist attendee to localStorage', e);
+        }
+
         toast.success("Registration successful!");
         setShowSuccess(true);
         reset();
