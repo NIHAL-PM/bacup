@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 const registrationSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, required: true },
   phone: { type: String, required: true },
   organization: String,
   ticketType: { type: String, enum: ['standard', 'premium', 'vip'], default: 'standard' },
@@ -36,6 +36,9 @@ const registrationSchema = new mongoose.Schema({
   referralCode: String,
   qrCode: String
 });
+
+// Ensure parity with register handler: composite unique index on email+dateOfBirth
+registrationSchema.index({ email: 1, dateOfBirth: 1 }, { unique: true });
 
 const Registration = mongoose.models.Registration || mongoose.model('Registration', registrationSchema);
 
